@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .core.config import settings
 from .db.session import engine, Base
 from .api import auth, clinics, patients, transmissions
+import re
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -13,10 +14,23 @@ app = FastAPI(
     description="CardiaVue Medical Dashboard API"
 )
 
-# Set up CORS middleware
+# Custom CORS middleware to handle wildcard domains for Codespaces
+def custom_cors_handler(origin: str) -> bool:
+    """Check if origin is allowed, including wildcard patterns for Codespaces."""
+    # Allow exact matches from our origins list
+    if origin in settings.BACKEND_CORS_ORIGINS:
+        return True
+    
+    # Handle wildcard pattern for GitHub Codespaces
+    if origin and origin.endswith('.app.github.dev'):
+        return True
+    
+    return False
+
+# Set up CORS middleware with custom origin validation
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.BACKEND_CORS_ORIGINS,
+    allow_origin_regex=r"https://.*\.app\.github\.dev$|http://localhost:\d+$|https://localhost:\d+$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
