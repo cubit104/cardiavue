@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardiaVue - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="assets/logo.svg" alt="CardiaVue Logo">
+                <h2>CardiaVue</h2>
+            </div>
+            
+            <div class="user-profile">
+                <div class="avatar">
+                    <img src="assets/avatar.jpg" alt="User Avatar">
+                </div>
+                <div class="user-info">
+                    <h3 id="user-name">Dr. Smith</h3>
+                    <p>Cardiologist</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="#"><i class="fas fa-home"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-user-injured"></i> Patients</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-calendar-alt"></i> Appointments</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-heartbeat"></i> Monitoring</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-chart-line"></i> Analytics</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-file-medical"></i> Reports</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search patients, reports...">
+                </div>
+                
+                <div class="header-actions">
+                    <div class="notification">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                    <div class="message">
+                        <i class="far fa-envelope"></i>
+                        <span class="badge">5</span>
+                    </div>
+                </div>
+            </header>
+            
+            <section class="dashboard-overview">
+                <h1>Dashboard Overview</h1>
+                <p class="date">August 9, 2025</p>
+                
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon patients">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Total Patients</h3>
+                            <p class="stat-value">1,248</p>
+                            <p class="stat-change positive"><i class="fas fa-arrow-up"></i> 8.2% this month</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon appointments">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Appointments Today</h3>
+                            <p class="stat-value">24</p>
+                            <p class="stat-change neutral"><i class="fas fa-minus"></i> Same as yesterday</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon critical">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Critical Cases</h3>
+                            <p class="stat-value">6</p>
+                            <p class="stat-change negative"><i class="fas fa-arrow-up"></i> 2 new cases</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon reports">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Pending Reports</h3>
+                            <p class="stat-value">12</p>
+                            <p class="stat-change positive"><i class="fas fa-arrow-down"></i> 3 less than yesterday</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="dashboard-charts">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h2>Patient Heart Rate Trends</h2>
+                        <div class="chart-actions">
+                            <select>
+                                <option>Last 7 days</option>
+                                <option>Last 30 days</option>
+                                <option>Last 90 days</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart">
+                        <canvas id="heartRateChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h2>Patient Distribution</h2>
+                        <div class="chart-actions">
+                            <select>
+                                <option>By Age</option>
+                                <option>By Condition</option>
+                                <option>By Location</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart">
+                        <canvas id="patientDistributionChart"></canvas>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="recent-patients">
+                <div class="section-header">
+                    <h2>Recent Patients</h2>
+                    <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="patients-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Diagnosis</th>
+                                <th>Last Checkup</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="patient-info">
+                                        <img src="assets/patient1.jpg" alt="Patient">
+                                        <div>
+                                            <h4>James Wilson</h4>
+                                            <p>#PT-0025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>58</td>
+                                <td>Hypertension</td>
+                                <td>Aug 8, 2025</td>
+                                <td><span class="status stable">Stable</span></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="patient-info">
+                                        <img src="assets/patient2.jpg" alt="Patient">
+                                        <div>
+                                            <h4>Maria Garcia</h4>
+                                            <p>#PT-0042</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>67</td>
+                                <td>Arrhythmia</td>
+                                <td>Aug 7, 2025</td>
+                                <td><span class="status critical">Critical</span></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="patient-info">
+                                        <img src="assets/patient3.jpg" alt="Patient">
+                                        <div>
+                                            <h4>Robert Chen</h4>
+                                            <p>#PT-0036</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>45</td>
+                                <td>Post MI</td>
+                                <td>Aug 6, 2025</td>
+                                <td><span class="status improving">Improving</span></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="patient-info">
+                                        <img src="assets/patient4.jpg" alt="Patient">
+                                        <div>
+                                            <h4>Sarah Johnson</h4>
+                                            <p>#PT-0018</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>72</td>
+                                <td>CHF</td>
+                                <td>Aug 5, 2025</td>
+                                <td><span class="status stable">Stable</span></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="action-btn"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <section class="upcoming-appointments">
+                <div class="section-header">
+                    <h2>Today's Appointments</h2>
+                    <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="appointments-list">
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <h3>09:30 AM</h3>
+                            <p>30 min</p>
+                        </div>
+                        <div class="appointment-info">
+                            <h4>Michael Brown</h4>
+                            <p>Follow-up checkup</p>
+                        </div>
+                        <div class="appointment-status">
+                            <span class="status upcoming">Upcoming</span>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="action-btn"><i class="fas fa-video"></i></button>
+                            <button class="action-btn"><i class="fas fa-phone"></i></button>
+                            <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <h3>10:15 AM</h3>
+                            <p>45 min</p>
+                        </div>
+                        <div class="appointment-info">
+                            <h4>Linda Martinez</h4>
+                            <p>New patient consultation</p>
+                        </div>
+                        <div class="appointment-status">
+                            <span class="status upcoming">Upcoming</span>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="action-btn"><i class="fas fa-video"></i></button>
+                            <button class="action-btn"><i class="fas fa-phone"></i></button>
+                            <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="appointment-card">
+                        <div class="appointment-time">
+                            <h3>11:30 AM</h3>
+                            <p>30 min</p>
+                        </div>
+                        <div class="appointment-info">
+                            <h4>David Lee</h4>
+                            <p>ECG Results Review</p>
+                        </div>
+                        <div class="appointment-status">
+                            <span class="status confirmed">Confirmed</span>
+                        </div>
+                        <div class="appointment-actions">
+                            <button class="action-btn"><i class="fas fa-video"></i></button>
+                            <button class="action-btn"><i class="fas fa-phone"></i></button>
+                            <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+</html>
