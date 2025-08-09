@@ -5,32 +5,35 @@ import Login from "./pages/Login";
 import ClinicDashboard from "./pages/ClinicDashboard";
 import Navbar from "./components/Layout/Navbar";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
     <ErrorBoundary componentName="App">
-      <Router>
-        <Navbar />
-        <ErrorBoundary componentName="Routes">
-          <Routes>
-            <Route path="/" element={
-              <ErrorBoundary componentName="Home">
-                <Home />
-              </ErrorBoundary>
-            } />
-            <Route path="/login" element={
-              <ErrorBoundary componentName="Login">
-                <Login />
-              </ErrorBoundary>
-            } />
-            <Route path="/dashboard" element={
-              <ErrorBoundary componentName="ClinicDashboard">
-                <ClinicDashboard />
-              </ErrorBoundary>
-            } />
-          </Routes>
-        </ErrorBoundary>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <ErrorBoundary componentName="Routes">
+            <Routes>
+              <Route path="/" element={
+                <ErrorBoundary componentName="Home">
+                  <Home />
+                </ErrorBoundary>
+              } />
+              <Route path="/login" element={
+                <ErrorBoundary componentName="Login">
+                  <Login />
+                </ErrorBoundary>
+              } />
+              <Route path="/dashboard" element={
+                <ErrorBoundary componentName="ClinicDashboard">
+                  <ClinicDashboard />
+                </ErrorBoundary>
+              } />
+            </Routes>
+          </ErrorBoundary>
+        </Router>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
