@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import logger from '../utils/logger';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -26,10 +27,14 @@ const Login = () => {
     setIsLoading(true);
     setError('');
 
+    logger.userAction('Login Attempt', { username: formData.username });
+
     try {
       // Basic validation
       if (!formData.username || !formData.password) {
-        setError('Please fill in all fields');
+        const errorMsg = 'Please fill in all fields';
+        setError(errorMsg);
+        logger.logFormValidation('login', 'username|password', errorMsg);
         return;
       }
 
@@ -39,16 +44,29 @@ const Login = () => {
       // For demo purposes, accept any credentials
       if (formData.username && formData.password) {
         // In a real app, you would validate credentials here
-        localStorage.setItem('cardiaVueAuth', JSON.stringify({
+        const authData = {
           username: formData.username,
           loginTime: new Date().toISOString()
-        }));
+        };
+        localStorage.setItem('cardiaVueAuth', JSON.stringify(authData));
+        
+        logger.authentication('login', formData.username, true, {
+          rememberMe: formData.rememberMe,
+          loginTime: authData.loginTime
+        });
+        
+        logger.navigation('/login', '/dashboard', 'authentication_success');
         navigate('/dashboard');
       } else {
         setError('Invalid credentials');
+        logger.authentication('login', formData.username, false, {
+          reason: 'Invalid credentials'
+        });
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      const errorMsg = 'Login failed. Please try again.';
+      setError(errorMsg);
+      logger.error('Login Error', { username: formData.username }, err);
     } finally {
       setIsLoading(false);
     }
