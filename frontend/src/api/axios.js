@@ -2,15 +2,24 @@ import axios from "axios";
 
 // Detect if we're in Codespaces or local development
 const getBaseURL = () => {
+  const hostname = window.location.hostname;
+  console.log('Frontend URL hostname:', hostname);
+  
   // Check if we're in GitHub Codespaces
-  if (window.location.hostname.includes('.app.github.dev')) {
-    // Extract the codespace name from the current URL
-    const hostname = window.location.hostname;
-    const codespaceUrl = hostname.replace('-3000', '-8000');
-    return `https://${codespaceUrl}/api`;
+  if (hostname.includes('.app.github.dev')) {
+    // Extract the base codespace name by removing the port part
+    // Pattern: {codespace-name}-{port}.app.github.dev
+    const lastDashIndex = hostname.lastIndexOf('-');
+    if (lastDashIndex !== -1) {
+      const baseCodespaceName = hostname.substring(0, lastDashIndex);
+      const backendUrl = `https://${baseCodespaceName}-8000.app.github.dev/api`;
+      console.log('Constructed backend URL for Codespaces:', backendUrl);
+      return backendUrl;
+    }
   }
   
-  // Local development
+  // Local development fallback
+  console.log('Using localhost backend URL');
   return "http://localhost:8000/api";
 };
 
