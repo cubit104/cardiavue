@@ -1,7 +1,21 @@
 import axios from "axios";
 
+// Detect if we're in Codespaces or local development
+const getBaseURL = () => {
+  // Check if we're in GitHub Codespaces
+  if (window.location.hostname.includes('.app.github.dev')) {
+    // Extract the codespace name from the current URL
+    const hostname = window.location.hostname;
+    const codespaceUrl = hostname.replace('-3000', '-8000');
+    return `https://${codespaceUrl}/api`;
+  }
+  
+  // Local development
+  return "http://localhost:8000/api";
+};
+
 const api = axios.create({
-  baseURL: "http://localhost:8000/api", // Adjust if your backend runs elsewhere
+  baseURL: getBaseURL(),
 });
 
 // Request interceptor to add JWT token to all requests
