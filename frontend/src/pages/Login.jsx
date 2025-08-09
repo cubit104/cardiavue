@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logger from '../utils/logger';
+import api from '../api/axios';
+import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -38,35 +41,46 @@ const Login = () => {
         return;
       }
 
-      // Simulate authentication (replace with real authentication logic)
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call the real authentication API
+      const response = await api.post('/auth/login', {
+        username: formData.username,
+        password: formData.password
+      });
       
-      // For demo purposes, accept any credentials
-      if (formData.username && formData.password) {
-        // In a real app, you would validate credentials here
-        const authData = {
-          username: formData.username,
-          loginTime: new Date().toISOString()
-        };
-        localStorage.setItem('cardiaVueAuth', JSON.stringify(authData));
-        
-        logger.authentication('login', formData.username, true, {
-          rememberMe: formData.rememberMe,
-          loginTime: authData.loginTime
-        });
-        
-        logger.navigation('/login', '/dashboard', 'authentication_success');
-        navigate('/dashboard');
-      } else {
-        setError('Invalid credentials');
-        logger.authentication('login', formData.username, false, {
-          reason: 'Invalid credentials'
-        });
-      }
+      const { access_token, token_type } = response.data;
+      
+      // Store JWT token and user data
+      const authData = {
+        username: formData.username,
+        loginTime: new Date().toISOString(),
+        tokenType: token_type
+      };
+      
+      // Use the auth context to manage login state
+      login(authData, access_token);
+      
+      logger.authentication('login', formData.username, true, {
+        rememberMe: formData.rememberMe,
+        loginTime: authData.loginTime
+      });
+      
+      logger.navigation('/login', '/dashboard', 'authentication_success');
+      navigate('/dashboard');
+      
     } catch (err) {
-      const errorMsg = 'Login failed. Please try again.';
+      let errorMsg = 'Login failed. Please try again.';
+      
+      if (err.response?.status === 401) {
+        errorMsg = 'Invalid username or password.';
+      } else if (err.response?.data?.detail) {
+        errorMsg = err.response.data.detail;
+      }
+      
       setError(errorMsg);
-      logger.error('Login Error', { username: formData.username }, err);
+      logger.authentication('login', formData.username, false, {
+        reason: errorMsg,
+        status: err.response?.status
+      });
     } finally {
       setIsLoading(false);
     }
