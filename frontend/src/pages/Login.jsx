@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logger from '../utils/logger';
 import api from '../api/axios';
 import { useAuth } from '../contexts/AuthContext';
+import { getLocalizedProfessional } from '../utils/localization';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const localizedProfessionals = getLocalizedProfessional("plural");
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -279,7 +281,7 @@ const Login = () => {
           </div>
           <div style={styles.tagline}>
             <h2 style={styles.taglineTitle}>Advanced Cardiac Monitoring</h2>
-            <p style={styles.taglineText}>Providing healthcare professionals with real-time insights</p>
+            <p style={styles.taglineText}>Providing {localizedProfessionals} with real-time insights</p>
           </div>
         </div>
       </div>
