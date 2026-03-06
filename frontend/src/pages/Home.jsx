@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getLocalizedProfessional } from '../utils/localization';
 
 const Home = () => {
   const navigate = useNavigate();
   const [animationPhase, setAnimationPhase] = useState(0);
+  const localizedProfessionals = getLocalizedProfessional("plural");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -253,7 +255,7 @@ const Home = () => {
         
         <p style={styles.description}>
           Professional healthcare monitoring solution for cardiac devices. Real-time patient data, 
-          intelligent alerts, and comprehensive analytics for healthcare professionals.
+          intelligent alerts, and comprehensive analytics for {localizedProfessionals}.
         </p>
 
         <button 

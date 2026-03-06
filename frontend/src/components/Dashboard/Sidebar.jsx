@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logger from "../../utils/logger";
+import { getLocalizedProfessional } from "../../utils/localization";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -138,6 +139,7 @@ const Sidebar = () => {
   // Get current user info
   const authData = localStorage.getItem('cardiaVueAuth') ? JSON.parse(localStorage.getItem('cardiaVueAuth')) : null;
   const username = authData?.username || 'User';
+  const localizedRole = getLocalizedProfessional("singular");
 
   return (
     <div style={styles.sidebar}>
@@ -182,7 +184,7 @@ const Sidebar = () => {
           </div>
           <div>
             <div style={styles.userName}>{username}</div>
-            <div style={styles.userRole}>Healthcare Professional</div>
+            <div style={styles.userRole}>{localizedRole}</div>
           </div>
         </div>
         
